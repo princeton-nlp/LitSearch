@@ -15,7 +15,7 @@ parser.add_argument("--dataset_path", required=False, default="princeton-nlp/Lit
 args = parser.parse_args()
 
 original_retrieval_results = utils.read_json(args.input_path)
-corpus_data = datasets.load_dataset(args.dataset_path, "corpus_clean", split="full")
+corpus_data = utils.get_clean_dict(datasets.load_dataset(args.dataset_path, "corpus_clean", split="full"))
 
 union_retrieval_results = []
 for result in tqdm(original_retrieval_results):

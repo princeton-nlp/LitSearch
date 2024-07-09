@@ -36,7 +36,7 @@ parser.add_argument("--dataset_path", required=False, default="princeton-nlp/Lit
 args = parser.parse_args()
 
 index = load_index(os.path.join(args.index_root_dir, args.index_name))
-query_set = datasets.load_dataset(args.dataset_path, "query", split="full")
+query_set = [query for query in datasets.load_dataset(args.dataset_path, "query", split="full")]
 for query in tqdm(query_set):
     query_text = query["query"]
     top_k = index.query(query_text, args.top_k)

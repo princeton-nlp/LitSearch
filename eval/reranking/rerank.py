@@ -98,7 +98,7 @@ if __name__ == "__main__":
     os.makedirs(args.output_dir, exist_ok=True)
     output_file = os.path.join(args.output_dir, os.path.basename(args.retrieval_results_file).replace(".json", ".reranked.json"))
 
-    index_type = os.path.basename(args.retrieval_results_file).split(".")[2]
+    index_type = os.path.basename(args.retrieval_results_file).split(".")[1]
     if index_type == "title_abstract":
         corpusid_to_text = {utils.get_clean_corpusid(item): utils.get_clean_title_abstract(item) for item in corpus_data}
     elif index_type == "full_paper":

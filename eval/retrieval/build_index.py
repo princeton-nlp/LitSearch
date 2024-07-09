@@ -6,7 +6,7 @@ from utils import utils
 from eval.retrieval.kv_store import KVStore
 
 def get_index_name(args: argparse.Namespace) -> str:
-    return os.path.basename(args.corpus_path) + "." + args.key
+    return os.path.basename(args.dataset_path) + "." + args.key
 
 def create_index(args: argparse.Namespace) -> KVStore:
     index_name = get_index_name(args)

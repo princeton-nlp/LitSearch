@@ -3,7 +3,7 @@
 This repository contains the code and data for paper LitSearch: A Retrieval Benchmark for Scientific **Lit**erature **Search**. In this paper, we introduce a benchmark consisting of a set of 597 realistic literature search queries about recent ML and NLP papers. We provide the code we used for benchmarking state-of-the-art retrieval models and two LLM-based reranking pipelines.
 
 ## Requirements
-Please install the latest versions of PyTorch (`torch`), HuggingFace Transformers (`transformers`), SentenceTransformers (`sentence-transformers`), Rank-BM25 (`rank-bm25`), GritLM (`gritlm`) and the OpenAI API package (`openai`). This codebase is tested on `torch==1.13.1`, `transformers==4.30.2`, `sentence-transformers==2.2.2`, `rank-bm25==0.2.2`, `gritlm==1.0.0` and `openai==1.33.0` with Python 3.7.16.
+Please install the latest versions of PyTorch (`torch`), NumPy (`numpy`), HuggingFace Transformers (`transformers`), HuggingFace Datasets (`datasets`), SentenceTransformers (`sentence-transformers`), InstructorEmbedding (`InstructorEmbedding`), Rank-BM25 (`rank-bm25`), GritLM (`gritlm`) and the OpenAI API package (`openai`). This codebase is tested on `torch==1.13.1`, `numpy==1.23.5`, `transformers==4.30.2`, `datasets==2.20.0`, `sentence-transformers==2.2.2`, `InstructorEmbedding==1.0.1`, `rank-bm25==0.2.2`, `gritlm==1.0.0` and `openai==1.33.0` with Python 3.10.14.
 
 Note: We used a standalone environment for GritLM since its dependencies were incompatible with other packages.
 
@@ -30,7 +30,7 @@ This repository provides support for running evaluations using the BM25, GTR, In
 
 #### Build retrieval index
 ```bash
-python3 -m eval.retrieval.build_index --index_type bm25 --key title_absract
+python3 -m eval.retrieval.build_index --index_type bm25 --key title_abstract
 ```
 
 #### Run retrieval using built index
