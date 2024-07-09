@@ -1,6 +1,7 @@
 import os
 import json
 from typing import List, Any, Tuple
+from datasets import Dataset
 from utils.openai_utils import OPENAIBaseEngine
 
 ##### file reading and writing #####
@@ -60,7 +61,7 @@ def calculate_ngram_overlap(query: str, text: str) -> float:
     overlap = len(query_ngrams.intersection(text_ngrams)) / len(query_ngrams)
     return overlap
 
-##### reading fields from s2orc corpus #####
+##### reading fields from corpus_s2orc #####
 
 def get_s2orc_corpusid(item: dict) -> int:
     return item['corpusid']
@@ -133,31 +134,30 @@ def get_s2orc_citations(item: dict, corpus_data: dict = None) -> List[int]:
     except:
         return []
 
-def get_s2orc_dict(filename: str) -> dict:
-    data = read_json(filename)
+def get_s2orc_dict(data: Dataset) -> dict:
     return {get_s2orc_corpusid(item): item for item in data}
 
-##### reading fields from extracted corpus #####
+##### reading fields from corpus_clean #####
 
-def get_extracted_corpusid(item: dict) -> int:
+def get_clean_corpusid(item: dict) -> int:
     return item['corpusid']
 
-def get_extracted_title(item: dict) -> str:
+def get_clean_title(item: dict) -> str:
     return item['title']
 
-def get_extracted_abstract(item: dict) -> str:
+def get_clean_abstract(item: dict) -> str:
     return item['abstract']
 
-def get_extracted_title_abstract(item: dict) -> str:
-    title = get_extracted_title(item)
-    abstract = get_extracted_abstract(item)
+def get_clean_title_abstract(item: dict) -> str:
+    title = get_clean_title(item)
+    abstract = get_clean_abstract(item)
     return f"Title: {title}\nAbstract: {abstract}"
 
-def get_extracted_full_paper(item: dict) -> str:
+def get_clean_full_paper(item: dict) -> str:
     return item['full_paper']
 
-def get_extracted_paragraph_indices(item: dict) -> List[Tuple[int, int]]:
-    text = get_extracted_full_paper(item)
+def get_clean_paragraph_indices(item: dict) -> List[Tuple[int, int]]:
+    text = get_clean_full_paper(item)
     paragraph_indices = []
     paragraph_start = 0
     paragraph_end = 0
@@ -169,25 +169,24 @@ def get_extracted_paragraph_indices(item: dict) -> List[Tuple[int, int]]:
         paragraph_start = paragraph_end + 2
     return paragraph_indices
 
-def get_extracted_text(item: dict, start_idx: int, end_idx: int) -> str:
-    text = get_extracted_full_paper(item)
+def get_clean_text(item: dict, start_idx: int, end_idx: int) -> str:
+    text = get_clean_full_paper(item)
     assert start_idx >= 0 and end_idx >= 0
     assert start_idx <= end_idx
     assert end_idx <= len(text)
     return text[start_idx:end_idx]
 
-def get_extracted_paragraphs(item: dict, min_words: int = 10) -> List[str]:
-    paragraph_indices = get_extracted_paragraph_indices(item)
-    paragraphs = [get_extracted_text(item, paragraph_start, paragraph_end) for paragraph_start, paragraph_end in paragraph_indices]
+def get_clean_paragraphs(item: dict, min_words: int = 10) -> List[str]:
+    paragraph_indices = get_clean_paragraph_indices(item)
+    paragraphs = [get_clean_text(item, paragraph_start, paragraph_end) for paragraph_start, paragraph_end in paragraph_indices]
     paragraphs = [paragraph for paragraph in paragraphs if len(paragraph.split()) >= min_words]
     return paragraphs
 
-def get_extracted_citations(item: dict) -> List[int]:
+def get_clean_citations(item: dict) -> List[int]:
     return item['citations']
 
-def get_extracted_dict(filename: str) -> dict:
-    data = read_json(filename)
-    return {get_extracted_corpusid(item): item for item in data}
+def get_clean_dict(data: Dataset) -> dict:
+    return {get_clean_corpusid(item): item for item in data}
 
 ##### openai gpt-4 model #####
 

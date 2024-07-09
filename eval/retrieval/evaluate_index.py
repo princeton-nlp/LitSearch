@@ -1,5 +1,6 @@
 import os
 import argparse
+import datasets
 from tqdm import tqdm
 from utils import utils
 from eval.retrieval.kv_store import KVStore
@@ -26,22 +27,21 @@ def load_index(index_path: str) -> KVStore:
     return index
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--query_set", type=str, required=True)
 parser.add_argument("--index_name", type=str, required=True)
 
 parser.add_argument("--top_k", type=int, required=False, default=200)
 parser.add_argument("--retrieval_results_root_dir", type=str, required=False, default="results/retrieval")
-parser.add_argument("--query_set_root_dir", type=str, required=False, default="query_sets")
 parser.add_argument("--index_root_dir", type=str, required=False, default="retrieval_indices")
+parser.add_argument("--dataset_path", required=False, default="princeton-nlp/LitSearch")
 args = parser.parse_args()
 
 index = load_index(os.path.join(args.index_root_dir, args.index_name))
-query_set = utils.read_json(os.path.join(args.query_set_root_dir, args.query_set) + ".jsonl")
+query_set = datasets.load_dataset(args.dataset_path, "query", split="full")
 for query in tqdm(query_set):
     query_text = query["query"]
     top_k = index.query(query_text, args.top_k)
     query["retrieved"] = top_k
 
 os.makedirs(args.retrieval_results_root_dir, exist_ok=True)
-output_path = os.path.join(args.retrieval_results_root_dir, f"{os.path.basename(args.query_set).replace('.json', '')}.{args.index_name}.jsonl")
+output_path = os.path.join(args.retrieval_results_root_dir, f"{args.index_name}.jsonl")
 utils.write_json(query_set, output_path)

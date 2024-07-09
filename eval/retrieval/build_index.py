@@ -1,11 +1,12 @@
 import os
 import argparse
+import datasets
 from typing import List
 from utils import utils
 from eval.retrieval.kv_store import KVStore
 
 def get_index_name(args: argparse.Namespace) -> str:
-    return os.path.basename(args.corpus_path).split(".")[0] + "." + args.key
+    return os.path.basename(args.corpus_path) + "." + args.key
 
 def create_index(args: argparse.Namespace) -> KVStore:
     index_name = get_index_name(args)
@@ -50,14 +51,14 @@ def create_index(args: argparse.Namespace) -> KVStore:
 
 def create_kv_pairs(data: List[dict], key: str) -> dict:
     if key == "title_abstract":
-        kv_pairs = {utils.get_extracted_title_abstract(record): utils.get_extracted_corpusid(record) for record in data}
+        kv_pairs = {utils.get_clean_title_abstract(record): utils.get_clean_corpusid(record) for record in data}
     elif key == "full_paper":
-        kv_pairs = {utils.get_extracted_full_paper(record): utils.get_extracted_corpusid(record) for record in data}
+        kv_pairs = {utils.get_clean_full_paper(record): utils.get_clean_corpusid(record) for record in data}
     elif key == "paragraphs":
         kv_pairs = {}
         for record in data:
-            corpusid = utils.get_extracted_corpusid(record)
-            paragraphs = utils.get_extracted_paragraphs(record)
+            corpusid = utils.get_clean_corpusid(record)
+            paragraphs = utils.get_clean_paragraphs(record)
             for paragraph_idx, paragraph in enumerate(paragraphs):
                 kv_pairs[paragraph] = (corpusid, paragraph_idx)
     else:
@@ -68,11 +69,11 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--index_type", required=True) # bm25, instructor, e5, gtr, grit
 parser.add_argument("--key", required=True), # title_absract, full_paper, paragraphs
 
-parser.add_argument("--corpus_path", required=False, default="corpus/acl_iclr_merged.extracted.jsonl")
+parser.add_argument("--dataset_path", required=False, default="princeton-nlp/LitSearch")
 parser.add_argument("--index_root_dir", required=False, default="retrieval_indices")
 args = parser.parse_args()
 
-corpus_data = utils.read_json(args.corpus_path)
+corpus_data = datasets.load_dataset(args.dataset_path, "corpus_clean", split="full")
 index = create_index(args)
 kv_pairs = create_kv_pairs(corpus_data, args.key)
 index.create_index(kv_pairs)

@@ -1,8 +1,9 @@
 import os
 import copy
 import json
-from tqdm import tqdm
 import argparse 
+import datasets
+from tqdm import tqdm
 from typing import List, Tuple
 from utils import utils
 from utils.openai_utils import OPENAIBaseEngine
@@ -86,11 +87,11 @@ if __name__ == "__main__":
 
     parser.add_argument("--model", type=str, help="Simulator LLM", default="gpt-4-1106-preview")
     parser.add_argument("--max_k", default=100, type=int, help="Max number of retrieved documents to rerank")
-    parser.add_argument("--corpus_path", type=str, required=False, default="corpus/acl_iclr_merged.extracted.jsonl")
     parser.add_argument("--output_dir", type=str, required=False, default="results/reranking/")
+    parser.add_argument("--dataset_path", required=False, default="princeton-nlp/LitSearch")
     args = parser.parse_args()
 
-    corpus_data = utils.read_json(args.corpus_path)
+    corpus_data = datasets.load_dataset(args.dataset_path, "corpus_clean", split="full")
     retrieval_results = utils.read_json(args.retrieval_results_file)
     model = utils.get_gpt4_model(args.model, azure=True)
     
@@ -99,9 +100,9 @@ if __name__ == "__main__":
 
     index_type = os.path.basename(args.retrieval_results_file).split(".")[2]
     if index_type == "title_abstract":
-        corpusid_to_text = {utils.get_extracted_corpusid(item): utils.get_extracted_title_abstract(item) for item in corpus_data}
+        corpusid_to_text = {utils.get_clean_corpusid(item): utils.get_clean_title_abstract(item) for item in corpus_data}
     elif index_type == "full_paper":
-        corpusid_to_text = {utils.get_extracted_corpusid(item): utils.get_extracted_full_paper(item) for item in corpus_data}
+        corpusid_to_text = {utils.get_clean_corpusid(item): utils.get_clean_full_paper(item) for item in corpus_data}
     else:
         raise ValueError(f"Invalid index type: {index_type}")
     
