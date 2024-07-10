@@ -56,4 +56,10 @@ If you have any questions related to the code or the paper, feel free to email A
 ## Citation
 
 Please cite our paper if you use LitSearch in your work:
-> TODO
+```bibtex
+@article{ajith2024litsearch,
+  title={LitSearch: A Retrieval Benchmark for Scientific Literature Search},
+  author={Ajith, Anirudh and Xia, Mengzhou and Chevalier, Alexis and Goyal, Tanya and Chen, Danqi and Gao, Tianyu},
+  year={2024}
+}
+```
