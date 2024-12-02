@@ -1,6 +1,6 @@
 # LitSearch
 
-This repository contains the code and data for paper LitSearch: A Retrieval Benchmark for Scientific **Lit**erature **Search**. In this paper, we introduce a benchmark consisting of a set of 597 realistic literature search queries about recent ML and NLP papers. We provide the code we used for benchmarking state-of-the-art retrieval models and two LLM-based reranking pipelines.
+This repository contains the code and data for paper [LitSearch: A Retrieval Benchmark for Scientific **Lit**erature **Search**](https://arxiv.org/abs/2407.18940). In this paper, we introduce a benchmark consisting of a set of 597 realistic literature search queries about recent ML and NLP papers. We provide the code we used for benchmarking state-of-the-art retrieval models and two LLM-based reranking pipelines.
 
 <img src="https://github.com/princeton-nlp/LitSearch/assets/6129506/569873f4-ba04-4bb2-a86f-ed44c77c6ded" alt="LitSearch" width="100%" >
 
@@ -59,9 +59,11 @@ If you have any questions related to the code or the paper, feel free to email A
 
 Please cite our paper if you use LitSearch in your work:
 ```bibtex
-@article{ajith2024litsearch,
-  title={LitSearch: A Retrieval Benchmark for Scientific Literature Search},
-  author={Ajith, Anirudh and Xia, Mengzhou and Chevalier, Alexis and Goyal, Tanya and Chen, Danqi and Gao, Tianyu},
-  year={2024}
+@inproceedings{ajith2024litsearch,
+   title={LitSearch: A Retrieval Benchmark for Scientific Literature Search},
+   author={Ajith, Anirudh and Xia, Mengzhou and Chevalier, Alexis and Goyal, Tanya and Chen, Danqi and Gao, Tianyu},
+   booktitle={Empirical Methods in Natural Language Processing (EMNLP)},
+   year={2024}
 }
+
 ```
